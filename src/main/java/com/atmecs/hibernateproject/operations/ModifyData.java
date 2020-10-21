@@ -11,29 +11,24 @@ import org.hibernate.cfg.Configuration;
 import com.atmecs.hibernateproject.entity.Employee;
 import com.atmecs.hibernateproject.util.HibernateUtil;
 
-public class AddData {
-	public void adddata() {
+public class ModifyData {
+	public void updateData() {
 		Session session = HibernateUtil.currentSession();
 		Scanner sc = new Scanner(System.in);
-
 		try {
 			session.beginTransaction();
-			System.out.println("Enter the number of records you want to add");
-			int number = sc.nextInt();
-			for (int i = 1; i <= number; i++) {
-				Employee employee = new Employee();
-				System.out.println("Enter Employee Details");
-				System.out.println("Enter id:");
-				employee.setId(sc.nextInt());
-				System.out.println("Enter First Name:");
-				employee.setFirstname(sc.next());
-				System.out.println("Enter Last Name:");
-				employee.setLastname(sc.next());
-				System.out.println("Enter Email:");
+			System.out.println("Enter id to modify record:");
+			Employee employee = (Employee) session.get(Employee.class, sc.nextInt());
+
+			if (employee != null) {
+				System.out.println("Enter the new email to update");
 				employee.setEmail(sc.next());
-				session.save(employee);
+				session.saveOrUpdate(employee);
+
 				session.getTransaction().commit();
-				System.out.println("Record successfully added to the table");
+				System.out.println("Record updated successfully..!!");
+			} else {
+				System.out.println("Record not found for given id, please enter a correct id");
 			}
 		} catch (SessionException e) {
 			System.out.println(e);
